@@ -1,8 +1,12 @@
 version: '3.4'
 services:
+  test-runner:
+    build: 
+      context: .
   server:
     build:
       context: .
+    entrypoint: ["flake8"]
     ports:
       - '5000:5000'
     volumes: 
