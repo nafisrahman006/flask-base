@@ -1,23 +1,29 @@
 name: Runs CI for this application
 on:
-  - push
+  # - push
   - pull_request
+
 jobs:
   lint-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Build test runner docker image
-      run: docker compose build test-runner
-    - name: Run unit tests
-      run: docker compose up --abort-on-container-exit test-runner
-  # unit-test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Install python 3.8
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.8'
-  #     - name: Run unit tests
-  #       run: pytest tests/
+      - uses: actions/checkout@v4
+      - name: Build test runner docker image
+        run: docker compose build test-runner
+      - name: Run unit tests
+        run: docker compose up --abort-on-container-exit test-runner
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install python 3.8
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+      - name: Install pytest package
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+      - name: Run unit tests
+        run: pytest tests/
