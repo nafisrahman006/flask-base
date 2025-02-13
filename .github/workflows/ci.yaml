@@ -40,12 +40,12 @@ jobs:
         run: pip install flake8==7.1.1
       - name: Run flake8 on changed files
         run: |
-          git fetch origin/test ${{ github.head_ref }} --depth=1
+          
           CHANGED_FILES=$(git diff --name-only origin/${{ github.head_ref }})
           echo $CHANGED_FILES
 
  
-
+# git fetch origin/test ${{ github.head_ref }} --depth=1
   # unit-test:a
   #   runs-on: ubuntu-latest
   #   steps:
