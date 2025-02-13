@@ -55,6 +55,7 @@ jobs:
             flake8 $CHANGED_FILES 
           else 
             echo "NO-FILE-CHANGED" 
+          fi
 
 
  
