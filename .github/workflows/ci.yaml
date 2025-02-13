@@ -4,10 +4,10 @@ on:
     branches:
         - master
         - "test/**"
-  pull_request:
-    # types:
-    #   - "opened"
-    #   - "edited"
+  # pull_request:
+  #   # types:
+  #   #   - "opened"
+  #   #   - "edited"
   
   # - push
   # - pull_request
