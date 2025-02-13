@@ -39,18 +39,18 @@ jobs:
       - name: get branch name
         run: |
           Github=${{github.head_ref}}
-          echo $Github
+          echo "$Github"
           Github=${{github.base_ref}}
-          echo $Github
+          echo "$Github"
 
       - name: Install flake8
         run: pip install flake8==7.1.1
       - name: Get changed files
         run: |
           CHANGED_FILES=$(git diff --name-only origin/test)
-          echo $CHANGED_FILES
+          echo "$CHANGED_FILES"
       - name: Run flake8 on changed files
-        run: flake8 $CHANGED_FILES
+        run: flake8 "$CHANGED_FILES"
 
  
 # git fetch origin/test ${{ github.head_ref }} --depth=1
