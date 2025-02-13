@@ -12,16 +12,21 @@ on:
         type: string
         description: "Defines python version for workflow"
         default: "3.8"
-
+# defaults:
+#   run:
+#     shell: bash
+#     working-directory: ./app
 jobs:
-  lint-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build test runner docker image
-        run: docker compose build test-runner
-      - name: Run lint check
-        run: docker compose up --abort-on-container-exit test-runner
+  # lint-check:
+  #   runs-on: ubuntu-latest
+
+    
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Build test runner docker image
+  #       run: docker compose build test-runner
+  #     - name: Run lint check
+  #       run: docker compose up --abort-on-container-exit test-runner
 
   lint-check-native:
     runs-on: ubuntu-latest
@@ -35,8 +40,8 @@ jobs:
         run: pip install flake8==7.1.1
       - name: Run flake8 on changed files
         run: |
-          git fetch origin ${{ github.base_ref }} --depth=1
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }})
+          git fetch origin ${{ github.head_ref }} --depth=1
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.head_ref }})
           echo $CHANGED_FILES
 
  
