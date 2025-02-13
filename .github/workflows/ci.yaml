@@ -40,7 +40,6 @@ jobs:
         run: pip install flake8==7.1.1
       - name: Run flake8 on changed files
         run: |
-          
           CHANGED_FILES=$(git diff --name-only origin/test)
           echo $CHANGED_FILES
 
