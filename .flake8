@@ -1,2 +1,2 @@
 [flake8]
-exclude = config.py,manage.py,__pycache__
+exclude = config.py,manage.py,__pycache__,.git

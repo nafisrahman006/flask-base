@@ -1,42 +1,103 @@
 name: Runs CI for this application
+
 on:
   push:
     branches:
-        - master
-        - "test/**"
-  # pull_request:
-  #   # types:
-  #   #   - "opened"
-  #   #   - "edited"
-  
-  # - push
-  # - pull_request
-
-
+      - master
+      - test
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      python-version:
+        type: string
+        description: "Defines python version for workflow"
+        default: "3.8"
+# defaults:
+#   run:
+#     shell: bash
+#     working-directory: ./app
 jobs:
-  lint-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build test runner docker image
-        run: docker compose build test-runner
-      - name: Run unit tests
-        run: docker compose up --abort-on-container-exit test-runner
+  # lint-check:
+  #   runs-on: ubuntu-latest
 
-  unit-test:
-    runs-on: ubuntu-latest
+    
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Build test runner docker image
+  #       run: docker compose build test-runner
+  #     - name: Run lint check
+  #       run: docker compose up --abort-on-container-exit test-runner
+
+  lint-check-native:
+    strategy:
+      matrix:
+        python-version:
+          - "3.8"
+          - "3.9"
+        os:
+          - "ubuntu-latest"
+          - "ubuntu-24.04-arm"
+        env:
+          - PRODUCTION
+          - STAGING
+
+        
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install python 3.8
+      - name: Install python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.8'
-      - name: Install pytest package
-        run: |
-          pip install -r requirements.txt
-          pip install pytest
-      - name: Run unit tests
-        run: pytest tests/
+          python-version: ${{ matrix.python-version }}
+      - name: Install flake8
+        run: pip install flake8==7.1.1
+      # - name: Run flake8 on changed files
+      #   run: |
+      #     export FLASK_ENV=${{ matrix.python-version }}
+      #     git fetch origin ${{ github.head_ref }} --depth=1
+      #     CHANGED_FILES=$(git diff --name-only origin/${{ github.head_ref }} -- *.py)
+      #     flake8 $CHANGED_FILES
+
+
+
+      # - name: get branch name
+      #   run: |
+      #     Github=${{github.head_ref}}
+      #     echo $Github
+      #     Github=${{github.base_ref}}
+      #     echo $Github
+
+      # - name: Install flake8
+      #   run: pip install flake8==7.1.1
+      # - name: Get changed files
+      #   run: |
+      #     CHANGED_FILES=$(git diff --name-only origin/test)
+      #     echo $CHANGED_FILES
+      # - name: Run flake8 on changed files
+      #   run: |
+      #     if [ -n $CHANGED_FILES ]; then 
+      #       flake8 $CHANGED_FILES 
+      #     else 
+      #       echo "NO-FILE-CHANGED" 
+      #     fi
+
+
+ 
+# git fetch origin/test ${{ github.head_ref }} --depth=1
+  # unit-test:a
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Install python 3.8
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.8'
+  #     - name: Install pytest package
+  #       run: |
+  #         pip install -r requirements.txt
+  #         pip install pytest
+  #     - name: Run unit tests
+  #       run: pytest tests/
   
   # server-build:
   #     runs-on: ubuntu-latest
